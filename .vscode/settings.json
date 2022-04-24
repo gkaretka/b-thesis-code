@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "stdint.h": "c",
+        "adf4351_spi_driver.h": "c"
+    }
+}
