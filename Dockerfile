@@ -1,4 +1,4 @@
-FROM gcc:latest
+FROM gcc:11.3.0
 
 RUN mkdir /usr/src/app
 

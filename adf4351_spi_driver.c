@@ -12,7 +12,7 @@ uint32_t registers[6] = {
 
 // Reference freq. - 25 MHz
 #define REF_IN 25000000.0
-#define PRESCISION 100000
+#define PRESCISION 1000000
 #define MOD_MAX 4095
 #define FRAC_MAX 4095
 
@@ -35,41 +35,32 @@ void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct)
         _f_pfd = REF_IN * 1 / (r_divider);
 
         out_divider = (double)out_dividers[out_div_pointer];
-        printf("Trying out divider: %lf\n\r", out_divider);
-
         N = ((double)freq_out / _f_pfd) * out_divider;
         INT = floor(N);
 
         out_div_pointer--;
     }
 
-    printf("N: %lf, INT: %lf \n\r", N, INT);
-
     double MOD = N - INT;
-    printf("MOD %lf \n\r", MOD);
 
-    uint64_t gcd;
-    double precision = PRESCISION;
-    uint64_t tN;
+    uint64_t gcd = 0;
+    double precision = PRESCISION * 10;
+    uint64_t tN = 0;
     do
     {
+        precision -= PRESCISION / 10000;
         tN = (uint64_t)round(MOD * precision);
-        printf("tN %lld \n\r", tN);
 
-        for (uint64_t i = 1; i <= tN && i <= MOD_MAX; ++i)
+        for (uint64_t i = 1; i <= tN && i <= (uint64_t)precision; ++i)
         {
-            if (tN % i == 0 && MOD_MAX % i == 0)
-                gcd = i;
+            if (tN % i == 0 && (uint64_t)precision % i == 0) gcd = i;
         }
-        printf("gcd %lld \n\r", gcd);
-        printf("FRAC: %d, MOD: %d\n\r", (tN / gcd), (MOD_MAX / gcd));
-        precision /= 10;
-    } while ((tN / gcd) > FRAC_MAX || (MOD_MAX / gcd) > MOD_MAX);
+    } while ((tN / gcd) > FRAC_MAX || (precision / gcd) > FRAC_MAX);
 
     data_struct->r_DIV = 1;           // default div: 1
     data_struct->o_DIV = out_divider; // out divider
     data_struct->FRAC = tN / gcd;     // FRAC reduced by gcd
-    data_struct->MOD = MOD_MAX / gcd; // MOD reduced by gcd
+    data_struct->MOD = precision / gcd; // MOD reduced by gcd
     data_struct->INT = (uint64_t)INT; //
     data_struct->PFD = _f_pfd;        // MHz
 }
