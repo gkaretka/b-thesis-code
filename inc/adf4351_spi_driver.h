@@ -16,5 +16,7 @@ typedef struct {
 
 void Pll_ADF4351_show_RF_settings(ADF4351_t *data_struct);
 void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct);
+uint64_t Pll_ADF4351_resulting_frequency(ADF4351_t *data_struct);
+uint64_t Pll_ADF4351_evaluate_frequency(uint64_t freq_set, ADF4351_t *data_struct);
 
 #endif

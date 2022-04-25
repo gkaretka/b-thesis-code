@@ -48,21 +48,41 @@ void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct)
     uint64_t tN = 0;
     do
     {
-        precision -= PRESCISION / 10000;
         tN = (uint64_t)round(MOD * precision);
 
         for (uint64_t i = 1; i <= tN && i <= (uint64_t)precision; ++i)
         {
             if (tN % i == 0 && (uint64_t)precision % i == 0) gcd = i;
         }
-    } while ((tN / gcd) > FRAC_MAX || (precision / gcd) > FRAC_MAX);
+        data_struct->MOD = precision / gcd; // MOD reduced by gcd
+        precision -= PRESCISION / 1000;
+    } while ((tN / gcd) > FRAC_MAX || (data_struct->MOD / gcd) > FRAC_MAX);
 
-    data_struct->r_DIV = 1;           // default div: 1
-    data_struct->o_DIV = out_divider; // out divider
-    data_struct->FRAC = tN / gcd;     // FRAC reduced by gcd
-    data_struct->MOD = precision / gcd; // MOD reduced by gcd
-    data_struct->INT = (uint64_t)INT; //
-    data_struct->PFD = _f_pfd;        // MHz
+    data_struct->r_DIV = 1;             // default div: 1
+    data_struct->o_DIV = out_divider;   // out divider
+    data_struct->FRAC = tN / gcd;       // FRAC reduced by gcd
+    data_struct->INT = (uint64_t)INT;   //
+    data_struct->PFD = _f_pfd;          // MHz
+}
+
+uint64_t Pll_ADF4351_resulting_frequency(ADF4351_t *data_struct)
+{
+    return (uint64_t)(((double)data_struct->INT + ((double)data_struct->FRAC / (double)data_struct->MOD))
+                                             * (double)(data_struct->PFD/(double)data_struct->r_DIV) / data_struct->o_DIV);
+}
+
+uint64_t Pll_ADF4351_evaluate_frequency(uint64_t freq_set, ADF4351_t *data_struct)
+{
+    uint64_t freq_res = Pll_ADF4351_resulting_frequency(data_struct);
+    if (freq_set > freq_res)
+        return freq_set - freq_res;
+    else
+        return freq_res - freq_set;
+}
+
+void Pll_ADF4351_evaluate_frequency_show(uint64_t freq_set, ADF4351_t *data_struct)
+{
+    printf("Frequency deviation [Hz]: %lld \n\r", Pll_ADF4351_evaluate_frequency(freq_set, data_struct));
 }
 
 void Pll_ADF4351_show_RF_settings(ADF4351_t *data_struct)
@@ -70,6 +90,6 @@ void Pll_ADF4351_show_RF_settings(ADF4351_t *data_struct)
     printf("RF_Settings: INT: %d, FRAC: %d, MOD: %d, PFD: %d, r_DIV: %d, o_DIV: %d\n\r",
            data_struct->INT, data_struct->FRAC, data_struct->MOD,
            data_struct->PFD, data_struct->r_DIV, data_struct->o_DIV);
-    printf("Resulting frequency: %lf \n\r", (((double)data_struct->INT + ((double)data_struct->FRAC / (double)data_struct->MOD))
-                                             * (double)data_struct->PFD) / data_struct->o_DIV);
+    printf("Resulting frequency: %lf \n\r", (((double)data_struct->INT + ((double)data_struct->FRAC / (double)data_struct->MOD)) * 
+            (double)data_struct->PFD/(double)data_struct->r_DIV) / data_struct->o_DIV);
 }
