@@ -6,6 +6,14 @@
 #include <math.h>
 
 
+// Reference freq. - 25 MHz
+#define REF_IN                      25000000.0
+#define PRESCISION                  1000000
+#define MOD_MAX                     4095
+#define FRAC_MAX                    4095
+
+#define REG_COUNT                   6
+
 #define REG0_INT_OFFSET             15
 #define REG0_FRAC_OFFSET            3
 #define REG0_CONTROL_BITS           0
@@ -99,11 +107,10 @@ typedef struct {
     uint8_t     charge_cancel;
     uint8_t     csr;
     uint8_t     clk_div_mode;
-    // 12-bit divider counter
+    uint16_t    clk_div_val;
 
     // reg 4 -----------------------------------
     uint8_t     feedback_select;
-    uint8_t     rf_divider_select;
     uint8_t     band_sel_clk_div;
     uint8_t     vco_power_down;
     uint8_t     mtld;
@@ -119,12 +126,62 @@ typedef struct {
 
 } ADF4351_settings_t;
 
+enum MUX_OUT {
+    THREE_STATE             = 0,
+    DVDD                    = 1,
+    DGND                    = 2,
+    R_COUNTER_OUT           = 3,
+    N_DIVIDER_OUT           = 4,
+    ANALOG_LOCK_DETECT      = 5,
+    DIGITAL_LOCK_DETECT_MUX = 6,
+};
+
+enum LOW_NOISE_LOW_SPURS_MODE {
+    LOW_NOISE_MODE = 0,
+    LOW_SPUSE_MODE = 3,
+};                 
+
+enum AUX_AND_OUT_POWER_IN_DBM {
+    MINUS_4                 = 0,
+    MINUS_1                 = 1,
+    PLUS_2                  = 2,
+    PLUS_5                  = 3,
+};
+
+enum LOCK_DETECT_PIN_OPERATION {
+    LOW_0                   = 0,
+    DIGITAL_LOCK_DETECT     = 1,
+    LOW_1                   = 2,
+    HIGH                    = 3,
+};
+
+enum CHARGE_PUMP_CURRENT_SETTINGS {
+    CP_CURRENT_310_UA       = 0,
+    CP_CURRENT_630_UA       = 1,
+    CP_CURRENT_940_UA       = 2,
+    CP_CURRENT_1250_UA      = 3,
+    CP_CURRENT_1560_UA      = 4,
+    CP_CURRENT_1880_UA      = 5,
+    CP_CURRENT_2190_UA      = 6,
+    CP_CURRENT_2500_UA      = 7,
+    CP_CURRENT_2810_UA      = 8,
+    CP_CURRENT_3130_UA      = 9,
+    CP_CURRENT_3440_UA      = 10,
+    CP_CURRENT_3750_UA      = 11,
+    CP_CURRENT_4060_UA      = 12,
+    CP_CURRENT_4380_UA      = 13,
+    CP_CURRENT_4690_UA      = 14,
+    CP_CURRENT_5000_UA      = 15,
+};
+
 
 void Pll_ADF4351_show_RF_settings(ADF4351_t *data_struct);
 void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct);
 uint64_t Pll_ADF4351_resulting_frequency(ADF4351_t *data_struct);
 uint64_t Pll_ADF4351_evaluate_frequency(uint64_t freq_set, ADF4351_t *data_struct);
 
-void Pll_ADF4351_fill_registers(ADF4351_t *adf_vals, ADF4351_register_t *adf_regs, ADF4351_settings_t* adf_sett);
+void Pll_ADF4351_fill_registers(ADF4351_t *adf_vals, ADF4351_settings_t* adf_sett, ADF4351_register_t *adf_regs);
+void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett);
+void Pll_ADF4351_display_registers_hex(ADF4351_register_t *data);
 
 #endif

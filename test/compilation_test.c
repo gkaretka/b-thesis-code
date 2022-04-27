@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "inc/adf4351_spi_driver.h"
+#include "../inc/adf4351_spi_driver.h"
 
 int main()
 {
