@@ -60,6 +60,7 @@
 #define REG4_CONTROL_BITS           4
 
 #define REG5_LD_PIN_MODE_OFFSET     22
+#define REG5_RESERVED_0_OFFSET      19
 #define REG5_CONTROL_BITS           5
 
 typedef struct {
@@ -142,10 +143,10 @@ enum LOW_NOISE_LOW_SPURS_MODE {
 };                 
 
 enum AUX_AND_OUT_POWER_IN_DBM {
-    MINUS_4                 = 0,
-    MINUS_1                 = 1,
-    PLUS_2                  = 2,
-    PLUS_5                  = 3,
+    OUT_POWER_MINUS_4       = 0,
+    OUT_POWER_MINUS_1       = 1,
+    OUT_POWER_PLUS_2        = 2,
+    OUT_POWER_PLUS_5        = 3,
 };
 
 enum LOCK_DETECT_PIN_OPERATION {

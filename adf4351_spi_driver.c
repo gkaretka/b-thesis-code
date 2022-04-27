@@ -105,6 +105,7 @@ void Pll_ADF4351_fill_registers(ADF4351_t *adf_vals, ADF4351_settings_t* adf_set
                   | REG4_CONTROL_BITS;
 
     uint32_t reg5 = ((adf_sett->ld_pin_mode & 0b11)             << REG5_LD_PIN_MODE_OFFSET)
+                  | (0b11                                       << REG5_RESERVED_0_OFFSET)
                   | REG5_CONTROL_BITS;
 
     adf_regs->reg0 = reg0;
@@ -149,21 +150,21 @@ void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett)
                                                                      * 0 1 FAST LOCK ENABLE
                                                                      * 1 0 RESYNC ENABLE
                                                                      * 1 1 RESERVED */
-    adf_sett->clk_div_val                   = 200;                  // Default value from AD software
+    adf_sett->clk_div_val                   = 150;                  // Default value from AD software
 
     // reg 4 ----------------------------------------------------------------------
     adf_sett->feedback_select               = 1;                    // DIVIDED/FUNDAMETAL 0/1 
-    adf_sett->band_sel_clk_div              = 40;                   // value from AD software
+    adf_sett->band_sel_clk_div              = 200;                  // value from AD software
     adf_sett->vco_power_down                = 0;                    // On/Off 1/0
     adf_sett->mtld                          = 0;                    // MUTE TILL LOCK DETECT On/Off 1/0
     adf_sett->aux_out_select                = 0;                    // DIVIDED/FUNDAMETAL 0/1
     adf_sett->aux_out_enable                = 0;                    // On/Off 1/0
-    adf_sett->aux_out_power                 = MINUS_4;              // Power in dBm
+    adf_sett->aux_out_power                 = OUT_POWER_MINUS_4;    // Power in dBm
     adf_sett->rf_out_enable                 = 1;                    // On/Off 1/0
-    adf_sett->out_power                     = MINUS_4;              // Power in dBm
+    adf_sett->out_power                     = OUT_POWER_PLUS_5;     // Power in dBm
 
     // reg 5 ----------------------------------------------------------------------
-    adf_sett->ld_pin_mode                   = LOW_0;                // LD PIN MODE
+    adf_sett->ld_pin_mode                   = DIGITAL_LOCK_DETECT;  // LD PIN MODE
 }
 
 uint64_t Pll_ADF4351_resulting_frequency(ADF4351_t *data_struct)
