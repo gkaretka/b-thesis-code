@@ -29,7 +29,7 @@ int main(void)
 
     /* Write some sample data */
     uint32_t data = 0xABFFAAFF;
-    if (write_u32_spi(data, strlen(data)) < 0)
+    if (write_u32_spi(data) < 0)
     {
         printf("Write to SPI failed. Error: %s\n", strerror(errno));
         return -1;
@@ -110,7 +110,7 @@ static int write_char_spi(char *write_buffer, int size)
 
 static int write_u32_spi(uint32_t data)
 {
-    int write_spi = write(spi_fd, &data, (size_t)sizeof(uint32_t));
+    int write_spi = write(spi_fd, &data, 4);
 
     if (write_spi < 0)
     {
