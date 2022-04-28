@@ -12,7 +12,8 @@
 /* Inline functions definition */
 int init_spi();
 int release_spi();
-int write_spi(char *write_data, int size);
+static int write_char_spi(char *write_buffer, int size);
+static int write_u32_spi(uint32_t data);
 
 /* Constants definition */
 int spi_fd = -1;
