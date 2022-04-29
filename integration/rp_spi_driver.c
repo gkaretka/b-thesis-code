@@ -10,8 +10,8 @@
 #include <linux/types.h>
 
 /* Inline functions definition */
-int init_spi();
-int release_spi();
+static int init_spi();
+static int release_spi();
 static int write_char_spi(char *write_buffer, int size);
 static int write_u32_spi(uint32_t data);
 
@@ -28,7 +28,7 @@ int main(void)
     }
 
     /* Write some sample data */
-    uint32_t data = 0xABFFAAFF;
+    uint32_t data = 0xAAFFAAFF;
     if (write_u32_spi(data) < 0)
     {
         printf("Write to SPI failed. Error: %s\n", strerror(errno));
@@ -76,7 +76,7 @@ static int init_spi()
     }
 
     /* Setting SPI bus speed */
-    int spi_speed = 1000000;
+    int spi_speed = 50000000;
 
     if (ioctl(spi_fd, SPI_IOC_WR_MAX_SPEED_HZ, &spi_speed) < 0)
     {
