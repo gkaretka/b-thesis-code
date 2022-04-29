@@ -1,4 +1,4 @@
-#include "inc/adf4351_spi_driver.h"
+#include "../inc/adf4351_spi_driver.h"
 
 // simple log2 implementation
 uint8_t _log2(uint8_t val)
