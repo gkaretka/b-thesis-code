@@ -35,15 +35,16 @@ int main(void)
 
     Pll_ADF4351_display_registers_hex(&regs);               // Display registers
     
-    uint32_t *data = &regs.reg0;
-    for (int i = 0; i < REG_COUNT; i++) {
+    // The right sequence according to datasheet is 5 to 0
+    uint32_t *data = &regs.reg5;
+    for (int i = REG_COUNT-1; i >= 0; i--) {
         printf("Reg%d: |0x%.6x|\n\r", i, *data);
-        if (write_u32_spi(spi_fd, *data) < 0)
+        if (write_u32_order_spi(spi_fd, *data) < 0)
         {
             printf("Write to SPI failed. Error: %s\n", strerror(errno));
             return -1;
         }
-        data++; // go to next uint32
+        data--; // go to next uint32
     }
 
     /* Release resources */

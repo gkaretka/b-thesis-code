@@ -72,3 +72,24 @@ int write_u32_spi(uint8_t spi_fd, uint32_t data)
 
     return 0;
 }
+
+/* Write 32bits to the SPI bus with order */
+int write_u32_order_spi(uint8_t spi_fd, uint32_t data)
+{
+    uint32_t _data = 0;
+    uint8_t *ptr = ((uint8_t*)&data)+3;
+    for (int i = 0 ; i < 4; i++) {
+        uint8_t val = *ptr;
+        _data |= ((uint32_t)val) << (8 * i);
+        ptr--;
+    }
+
+    int write_spi = write(spi_fd, &_data, 4);
+
+    if (write_spi < 0) {
+        printf("Failed to write to SPI. Error: %s\n", strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
