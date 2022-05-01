@@ -17,4 +17,6 @@ int main()
     Pll_ADF4351_fill_registers(&vals, &settings, &regs);    // fill registers with data
 
     Pll_ADF4351_display_registers_hex(&regs);               // Display registers
+
+    return 0;
 }

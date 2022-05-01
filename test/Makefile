@@ -3,4 +3,4 @@ CFILES = ../libs/src/adf4351_spi_driver.c
 LDFLAGS += -lm 
 
 all:
-	gcc compilation_test.c $(CFILES) $(CFLAGS) $(LDFLAGS) -o app.o
+	gcc full_load.c $(CFILES) $(CFLAGS) $(LDFLAGS) -o app.o

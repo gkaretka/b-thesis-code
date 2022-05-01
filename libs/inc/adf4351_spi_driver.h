@@ -180,9 +180,11 @@ void Pll_ADF4351_show_RF_settings(ADF4351_t *data_struct);
 void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct);
 uint64_t Pll_ADF4351_resulting_frequency(ADF4351_t *data_struct);
 uint64_t Pll_ADF4351_evaluate_frequency(uint64_t freq_set, ADF4351_t *data_struct);
+void Pll_ADF4351_evaluate_frequency_show(uint64_t freq_set, ADF4351_t *data_struct);
 
 void Pll_ADF4351_fill_registers(ADF4351_t *adf_vals, ADF4351_settings_t* adf_sett, ADF4351_register_t *adf_regs);
 void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett);
 void Pll_ADF4351_display_registers_hex(ADF4351_register_t *data);
+
 
 #endif
