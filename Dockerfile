@@ -8,8 +8,8 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app/
 
-RUN dir
+WORKDIR /usr/src/app/test
 
-RUN gcc -o myapp *.c -I/user/src/app/inc -lm
+RUN make
 
-CMD ["./myapp"]
+CMD ["./app.o"]
