@@ -11,6 +11,7 @@
 
 #include "../libs/inc/rp_spi_driver.h"
 #include "../libs/inc/adf4351_spi_driver.h"
+#include "../libs/inc/band_selector_driver.h"
 
 int main(void)
 {
@@ -53,6 +54,11 @@ int main(void)
         printf("Relase of SPI resources failed, Error: %s\n", strerror(errno));
         return -1;
     }
+
+    rp_gpio_init();
+    select_band(BAND_SW);
+    select_filter(IF_FILTER_5MHZ);
+    release_gpio_api();
 
     return 0;
 }
