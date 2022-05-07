@@ -1,0 +1,59 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Wed May  4 13:11:09 2022
+# Process ID: 4680
+# Current directory: C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent15232 C:\Users\gkaretka\Documents\GitHub\b-thesis-code\fpga\PitayaFiles\projects\bpsk_mod.xpr
+# Log file: C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/vivado.log
+# Journal file: C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.xpr
+report_ip_status -name ip_status 
+update_compile_order -fileset sources_1
+upgrade_ip [get_ips  {system_xlconstant_0_0 system_xlconstant_1_0 system_fir_compiler_1_0 system_subset_0_0 system_ps_0_axi_periph_0 system_clk_wiz_0_0 system_c_counter_binary_0_0 system_pll_0_0 system_const_1_0 system_xlconstant_0_1 system_conv_0_0 system_const_0_0 system_xlslice_0_1}] -log ip_upgrade.log
+export_ip_user_files -of_objects [get_ips {system_xlconstant_0_0 system_xlconstant_1_0 system_fir_compiler_1_0 system_subset_0_0 system_ps_0_axi_periph_0 system_clk_wiz_0_0 system_c_counter_binary_0_0 system_pll_0_0 system_const_1_0 system_xlconstant_0_1 system_conv_0_0 system_const_0_0 system_xlslice_0_1}] -no_script -sync -force -quiet
+generate_target all [get_files  C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.srcs/sources_1/bd/system/system.bd]
+export_ip_user_files -of_objects [get_files C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.srcs/sources_1/bd/system/system.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.srcs/sources_1/bd/system/system.bd] -directory C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.ip_user_files/sim_scripts -ip_user_files_dir C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.ip_user_files -ipstatic_source_dir C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.cache/compile_simlib/modelsim} {questa=C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.cache/compile_simlib/questa} {riviera=C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.cache/compile_simlib/riviera} {activehdl=C:/Users/gkaretka/Documents/GitHub/b-thesis-code/fpga/PitayaFiles/projects/bpsk_mod.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+startgroup
+create_bd_cell -type ip -vlnv xilinx.com:ip:dds_compiler:6.0 dds_compiler_0
+endgroup
+set_property -dict [list CONFIG.DDS_Clock_Rate {125} CONFIG.Spurious_Free_Dynamic_Range {96} CONFIG.Frequency_Resolution {0.1} CONFIG.Has_Phase_Out {false} CONFIG.Output_Frequency1 {10} CONFIG.Noise_Shaping {Auto} CONFIG.Phase_Width {31} CONFIG.Output_Width {16} CONFIG.M_DATA_Has_TUSER {Not_Required} CONFIG.Latency {8} CONFIG.PINC1 {1010001111010111000010100011}] [get_bd_cells dds_compiler_0]
+set_property location {6 1668 433} [get_bd_cells dds_compiler_0]
+set_property location {7 2015 166} [get_bd_cells dds_compiler_0]
+connect_bd_net [get_bd_pins dds_compiler_0/aclk] [get_bd_pins pll_0/clk_out1]
+startgroup
+set_property -dict [list CONFIG.Output_Selection {Sine}] [get_bd_cells dds_compiler_0]
+endgroup
+set_property location {6 2053 173} [get_bd_cells dds_compiler_0]
+startgroup
+connect_bd_net [get_bd_pins dds_compiler_0/m_axis_data_tdata] [get_bd_pins dac_reg_0/dac_ch0]
+endgroup
+set_property location {7 2414 183} [get_bd_cells dds_compiler_0]
+save_bd_design
+launch_runs impl_1 -to_step write_bitstream -jobs 6
+wait_on_run impl_1
+connect_bd_net [get_bd_pins dac_reg_0/dac_ch1] [get_bd_pins dds_compiler_0/m_axis_data_tdata]
+delete_bd_objs [get_bd_nets dds_compiler_0_m_axis_data_tdata]
+connect_bd_net [get_bd_pins dac_reg_0/dac_ch0] [get_bd_pins pll_0/clk_out1]
+undo
+connect_bd_net [get_bd_pins dac_reg_0/dac_ch0] [get_bd_pins dds_compiler_0/m_axis_data_tdata]
+connect_bd_net [get_bd_pins dac_reg_0/dac_ch1] [get_bd_pins dds_compiler_0/m_axis_data_tdata]
+save_bd_design
+reset_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 6
+wait_on_run impl_1
+startgroup
+set_property -dict [list CONFIG.CONST_VAL {1}] [get_bd_cells xlconstant_1]
+endgroup
+save_bd_design
+reset_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 6
+wait_on_run impl_1
+startgroup
+set_property -dict [list CONFIG.PCW_UART0_PERIPHERAL_ENABLE {0} CONFIG.PCW_SPI1_PERIPHERAL_ENABLE {1} CONFIG.PCW_SPI1_SPI1_IO {MIO 10 .. 15} CONFIG.PCW_SPI1_GRP_SS1_ENABLE {1}] [get_bd_cells ps_0]
+endgroup
+save_bd_design

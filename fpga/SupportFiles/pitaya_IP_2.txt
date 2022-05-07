@@ -1,0 +1,22 @@
+172.25.96.101    RP-01.urel.feec.vutbr.cz         = 00:26:32:f0:5a:93 (194402 min)
+172.25.96.102    RP-02.urel.feec.vutbr.cz         = 00:26:32:f0:58:38 (194402 min)
+172.25.96.103    RP-03.urel.feec.vutbr.cz         = 00:26:32:f0:59:86 (481983 min) OK
+172.25.96.104    RP-04.urel.feec.vutbr.cz         = 00:26:32:f0:57:04 (515430 min)
+
+
+172.25.96.105    RP-05.urel.feec.vutbr.cz         = 00:26:32:f0:57:F4 (515430 min)                               
+172.25.96.106    RP-06.urel.feec.vutbr.cz         = 00:26:32:f0:58:04 (515430 min OK                             
+172.25.96.107    RP-07.urel.feec.vutbr.cz         = 00:26:32:f0:58:32 (515430 min OK                             
+172.25.96.108    RP-08.urel.feec.vutbr.cz         = 00:26:32:f0:57:C2 (515430 min OK                             
+172.25.96.109    RP-09.urel.feec.vutbr.cz         = 00:26:32:f0:57:F1 (515430 min OK                             
+172.25.96.110    RP-10.urel.feec.vutbr.cz         = 00:26:32:f0:57:F8 (515430 min OK                             
+172.25.96.111    RP-11.urel.feec.vutbr.cz         = 00:26:32:f0:57:E9 (515430 min OK                             
+172.25.96.112    RP-12.urel.feec.vutbr.cz         = 00:26:32:f0:57:CD (515430 min OK                             
+172.25.96.113    RP-13.urel.feec.vutbr.cz         = 00:26:32:f0:57:F3 (515430 min OK                             
+172.25.96.114    RP-14.urel.feec.vutbr.cz         = 00:26:32:f0:57:42 (515430 min OK                             
+172.25.96.115    RP-15.urel.feec.vutbr.cz         = 00:26:32:f0:57:20 (515430 min OK                            
+172.25.96.116    RP-16.urel.feec.vutbr.cz         = 00:26:32:f0:59:93 (515430 min OK                             
+172.25.96.117    RP-17.urel.feec.vutbr.cz         = 00:26:32:f0:58:20 (515430 min OK                               
+
+                               
+172.25.96.122    RP-22.urel.feec.vutbr.cz         = 00:26:32:f0:57:ef (194402 min)
