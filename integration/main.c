@@ -45,6 +45,7 @@ int main(void)
             printf("Write to SPI failed. Error: %s\n", strerror(errno));
             return -1;
         }
+        sleep(1);
         data--; // go to next uint32
     }
 

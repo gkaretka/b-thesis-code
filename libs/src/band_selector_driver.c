@@ -35,14 +35,13 @@ int select_band(enum band_t band)
             rp_DpinSetState(SW1_2_CTR, RP_LOW);
             break;
 
-        case BAND_SW:
-            printf("SW band \n\r");
+        case BAND_HF_VHF:
+            printf("HF/VHF band \n\r");
             rp_DpinSetState(SW1_1_CTR, RP_HIGH);
             rp_DpinSetState(SW1_2_CTR, RP_LOW);
             break;
-
-        case BAND_HF_HVF:
-            printf("HF/VHF band \n\r");
+        case BAND_SW:
+            printf("SW band \n\r");
             rp_DpinSetState(SW1_1_CTR, RP_LOW);
             rp_DpinSetState(SW1_2_CTR, RP_HIGH);
             break;
@@ -79,7 +78,7 @@ int select_filter(enum if_filter_t filter)
             rp_DpinSetState(SW3_2_CTR, RP_LOW);
             break;
 
-        case BAND_HF_HVF:
+        case IF_STAGE_OFF:
             printf("70MHz Filter \n\r");
             // On RF_1 -> RF_COM
             rp_DpinSetState(SW2_1_CTR, RP_HIGH);
