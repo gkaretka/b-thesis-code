@@ -139,7 +139,7 @@ enum MUX_OUT {
 
 enum LOW_NOISE_LOW_SPURS_MODE {
     LOW_NOISE_MODE = 0,
-    LOW_SPUSE_MODE = 3,
+    LOW_SPUR_MODE = 3,
 };                 
 
 enum AUX_AND_OUT_POWER_IN_DBM {
