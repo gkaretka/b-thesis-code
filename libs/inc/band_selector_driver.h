@@ -25,7 +25,7 @@ enum band_t {
 
 enum if_filter_t {
     IF_FILTER_5MHZ  = 0,
-    IF_FILTER_70MHz = 1,
+    IF_FILTER_70MHZ = 1,
     IF_STAGE_OFF    = 2
 };
 

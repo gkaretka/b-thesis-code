@@ -78,7 +78,7 @@ int select_filter(enum if_filter_t filter)
             rp_DpinSetState(SW3_2_CTR, RP_LOW);
             break;
 
-        case IF_STAGE_OFF:
+        case IF_FILTER_70MHZ:
             printf("70MHz Filter \n\r");
             // On RF_1 -> RF_COM
             rp_DpinSetState(SW2_1_CTR, RP_HIGH);
