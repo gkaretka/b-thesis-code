@@ -15,8 +15,11 @@
 
 int main(void)
 {
+    /* Init GPIO peripheral - used for band/filter selection + SPI CS*/
+    rp_gpio_init();
+    
+    /* Init the SPI resources */
     int spi_fd = -1;
-    /* Init the spi resources */
     if (init_spi(&spi_fd) < 0)
     {
         printf("Initialization of SPI failed. Error: %s\n", strerror(errno));
@@ -32,15 +35,20 @@ int main(void)
     Pll_ADF4351_set_frequency(40000000, &vals);             // calculate values
     Pll_ADF4351_show_RF_settings(&vals);                    // show calculated values
     Pll_ADF4351_load_default_settings(&settings);           // load default settings
+    
+    // in order to change values access them in this way (example, no need to uncomment)
+    // settings.band_sel_clk_div = 80;                      
+
+    // fill in registers
     Pll_ADF4351_fill_registers(&vals, &settings, &regs);    // fill registers with data
 
     Pll_ADF4351_display_registers_hex(&regs);               // Display registers
-    
+
     // The right sequence according to datasheet is 5 to 0
     uint32_t *data = &regs.reg5;
     for (int i = REG_COUNT-1; i >= 0; i--) {
         printf("Reg%d: |0x%.6x|\n\r", i, *data);
-        if (write_u32_order_spi(spi_fd, *data) < 0)
+        if (write_u32_order_spi(spi_fd, SPI_CS1, *data) < 0)                // SPI_CS1 or SPI_CS2
         {
             printf("Write to SPI failed. Error: %s\n", strerror(errno));
             return -1;
@@ -56,7 +64,6 @@ int main(void)
         return -1;
     }
 
-    rp_gpio_init();
     select_band(BAND_SW);
     select_filter(IF_FILTER_5MHZ);
     release_gpio_api();

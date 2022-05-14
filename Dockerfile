@@ -12,4 +12,4 @@ WORKDIR /usr/src/app/test
 
 RUN make
 
-CMD ["./app.o"]
+CMD ["./runner.sh"]

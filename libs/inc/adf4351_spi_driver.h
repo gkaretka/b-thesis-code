@@ -6,8 +6,8 @@
 #include <math.h>
 
 
-// Reference freq. - 25 MHz
-#define REF_IN                      25000000.0
+// Reference freq. - 10 MHz
+#define REF_IN                      10000000.0
 #define PRESCISION                  1000000
 #define MOD_MAX                     4095
 #define FRAC_MAX                    4095
@@ -126,6 +126,12 @@ typedef struct {
     uint8_t     ld_pin_mode;
 
 } ADF4351_settings_t;
+
+enum CLK_DIV_MODE {
+    CLOCK_DIVIDER_OFF       = 0,
+    FAST_LOCK_ENABLE        = 1,
+    RESYNC_ENABLE           = 2,
+};
 
 enum MUX_OUT {
     THREE_STATE             = 0,

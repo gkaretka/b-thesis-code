@@ -38,6 +38,7 @@ void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct)
     uint64_t gcd = 0;
     double precision = PRESCISION * 10;
     uint64_t tN = 0;
+
     do
     {
         tN = (uint64_t)round(MOD * precision);
@@ -46,15 +47,21 @@ void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct)
         {
             if (tN % i == 0 && (uint64_t)precision % i == 0) gcd = i;
         }
+
+        if (gcd == 0) {
+            data_struct->MOD = 2; // min value
+            break;                // prevent division by zero - calc not required
+        }
+
         data_struct->MOD = precision / gcd; // MOD reduced by gcd
         precision -= PRESCISION / 1000;
     } while ((tN / gcd) > FRAC_MAX || (data_struct->MOD / gcd) > FRAC_MAX);
 
-    data_struct->r_DIV = r_divider;             // default div: 1
-    data_struct->o_DIV = out_divider;   // out divider
-    data_struct->FRAC = tN / gcd;       // FRAC reduced by gcd
-    data_struct->INT = (uint64_t)INT;   //
-    data_struct->PFD = _f_pfd;          // MHz
+    data_struct->r_DIV = r_divider;                 // default div: 1
+    data_struct->o_DIV = out_divider;               // out divider
+    data_struct->FRAC = gcd != 0 ? tN / gcd : 0;    // FRAC reduced by gcd
+    data_struct->INT = (uint64_t)INT;               //
+    data_struct->PFD = _f_pfd;                      // MHz
 }
 
 void Pll_ADF4351_fill_registers(ADF4351_t *adf_vals, ADF4351_settings_t* adf_sett, ADF4351_register_t *adf_regs)
@@ -131,7 +138,7 @@ void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett)
     adf_sett->ref_doubler                   = 0;                    // On/Off 1/0
     adf_sett->ref_divider                   = 0;                    // On/Off 1/0 
     adf_sett->double_buffer                 = 0;                    // On/Off 1/0
-    adf_sett->charge_pump_settings          = CP_CURRENT_2500_UA;   // See datasheet (default 2.5 mA)
+    adf_sett->charge_pump_settings          = CP_CURRENT_5000_UA;   // See datasheet (default 5.0 mA)
     adf_sett->ldf                           = 0;                    // Integer mode/Fraction mode 1/0
     adf_sett->ldp                           = 0;                    // 10 ns / 6 ns [0/1]
     adf_sett->pd_polarity                   = 1;                    // Positive/Negative 1/0
@@ -146,7 +153,7 @@ void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett)
                                                                     // 3ns (INT-N)
     adf_sett->charge_cancel                 = 0;                    // On/Off 1/0
     adf_sett->csr                           = 0;                    // CYCLE SLIP REDUCTION On/Off 1/0
-    adf_sett->clk_div_mode                  = 0b00;                 /* 0 0 CLOCK DIVIDER OFF
+    adf_sett->clk_div_mode                  = CLOCK_DIVIDER_OFF;    /* 0 0 CLOCK DIVIDER OFF
                                                                      * 0 1 FAST LOCK ENABLE
                                                                      * 1 0 RESYNC ENABLE
                                                                      * 1 1 RESERVED */
@@ -154,7 +161,7 @@ void Pll_ADF4351_load_default_settings(ADF4351_settings_t* adf_sett)
 
     // reg 4 ----------------------------------------------------------------------
     adf_sett->feedback_select               = 1;                    // DIVIDED/FUNDAMETAL 0/1 
-    adf_sett->band_sel_clk_div              = 200;                  // value from AD software
+    adf_sett->band_sel_clk_div              = 80;                   // value from AD software - CALCULATED BASED ON REF_IN!
     adf_sett->vco_power_down                = 0;                    // On/Off 1/0
     adf_sett->mtld                          = 0;                    // MUTE TILL LOCK DETECT On/Off 1/0
     adf_sett->aux_out_select                = 0;                    // DIVIDED/FUNDAMETAL 0/1

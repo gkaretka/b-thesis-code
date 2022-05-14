@@ -2,6 +2,14 @@
 
 int init_spi(int *spi_fd)
 {
+    /* Init CS GPIO */
+    rp_dpin_t output_pins[] = {SPI_CS1, SPI_CS2};
+
+    for (uint8_t i = 0; i < CS_PIN_COUNT; i++) {
+        rp_DpinSetDirection (output_pins[i], RP_OUT);
+        rp_DpinSetState(output_pins[i], RP_HIGH);
+    }
+
     /* MODES: mode |= SPI_LOOP;         --- NOT WORKING
      *        mode |= SPI_CPHA;
      *        mode |= SPI_CPOL;
@@ -74,7 +82,7 @@ int write_u32_spi(uint8_t spi_fd, uint32_t data)
 }
 
 /* Write 32bits to the SPI bus with order */
-int write_u32_order_spi(uint8_t spi_fd, uint32_t data)
+int write_u32_order_spi(uint8_t spi_fd, rp_dpin_t cs_pin, uint32_t data)
 {
     uint32_t _data = 0;
     uint8_t *ptr = ((uint8_t*)&data)+3;
@@ -84,7 +92,11 @@ int write_u32_order_spi(uint8_t spi_fd, uint32_t data)
         ptr--;
     }
 
-    int write_spi = write(spi_fd, &_data, 4);
+    rp_DpinSetState(cs_pin, RP_LOW);            // SET CS LOW
+    usleep(10);                                 // wait 10 us
+    int write_spi = write(spi_fd, &_data, 4);   // send 32bit data (register)
+    usleep(10);                                 // wait 10 us
+    rp_DpinSetState(cs_pin, RP_HIGH);           // SET CS HIGH
 
     if (write_spi < 0) {
         printf("Failed to write to SPI. Error: %s\n", strerror(errno));
