@@ -12,4 +12,6 @@ WORKDIR /usr/src/app/test
 
 RUN make
 
+RUN chmod +x runner.sh
+
 CMD ["./runner.sh"]
