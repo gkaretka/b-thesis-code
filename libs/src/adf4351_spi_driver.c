@@ -15,14 +15,32 @@ uint8_t _log2(uint8_t val)
 void Pll_ADF4351_set_frequency(uint64_t freq_out, ADF4351_t *data_struct)
 {
     double out_divider = 1;
-    uint32_t out_dividers[] = {1, 2, 4, 8, 16, 32, 64};
+    uint64_t out_dividers[] = {1, 2, 4, 8, 16, 32, 64};
 
     int8_t out_div_pointer = 6;
+    int8_t out_div_pointer_max = 6;
+    int8_t out_div_pointer_min = 0;
+    for (int i = 6; i > 0; i--) {
+        if (freq_out * out_dividers[i] <= 4400000000) {
+            out_div_pointer_max = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < 7; i++) {
+        if (freq_out * out_dividers[i] >= 2200000000) {
+	    out_div_pointer_min = i;
+            break;
+	}
+    }
+    
+    out_div_pointer = out_div_pointer_max;
+    printf("out div pointer, max, min: %d, %d, %d\n\r", out_div_pointer, out_div_pointer_max, out_div_pointer_min);
     double INT = 0;
     double N = 0;
     double _f_pfd = 0;
     double r_divider = 1;
-    while (out_div_pointer >= 0 && (INT < 23 || INT > 65535))
+    while (out_div_pointer >= out_div_pointer_min && (INT < 23 || INT > 65535))
     {
         _f_pfd = REF_IN * 1 / (r_divider);
 

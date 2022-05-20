@@ -93,15 +93,14 @@ int write_u32_order_spi(uint8_t spi_fd, rp_dpin_t cs_pin, uint32_t data)
     }
 
     rp_DpinSetState(cs_pin, RP_LOW);            // SET CS LOW
-    usleep(10);                                 // wait 10 us
+    usleep(10000);                                 // wait 10 us
     int write_spi = write(spi_fd, &_data, 4);   // send 32bit data (register)
-    usleep(10);                                 // wait 10 us
-    rp_DpinSetState(cs_pin, RP_HIGH);           // SET CS HIGH
-
     if (write_spi < 0) {
         printf("Failed to write to SPI. Error: %s\n", strerror(errno));
         return -1;
     }
 
+    rp_DpinSetState(cs_pin, RP_HIGH);           // SET CS HIGH
+    usleep(10000);
     return 0;
 }

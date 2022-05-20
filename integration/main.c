@@ -25,14 +25,16 @@ int main(void)
         printf("Initialization of SPI failed. Error: %s\n", strerror(errno));
         return -1;
     }
+    sleep(1);
+
 
     ADF4351_t vals;
     ADF4351_settings_t settings;
     ADF4351_register_t regs;
 
-    // set 40 MHz
+    // Setup first PLL ----------------------------------------------------------------------------------------
     // Warning - this sets output to full +5 dBm power.
-    Pll_ADF4351_set_frequency(40000000, &vals);             // calculate values
+    Pll_ADF4351_set_frequency(428000000, &vals);             // calculate values
     Pll_ADF4351_show_RF_settings(&vals);                    // show calculated values
     Pll_ADF4351_load_default_settings(&settings);           // load default settings
     
@@ -53,7 +55,35 @@ int main(void)
             printf("Write to SPI failed. Error: %s\n", strerror(errno));
             return -1;
         }
-        sleep(1);
+       
+        data--; // go to next uint32
+    }
+
+    // Setup second PLL ----------------------------------------------------------------------------------------
+
+    // Warning - this sets output to full +5 dBm power.
+    Pll_ADF4351_set_frequency(428000000*2, &vals);          // calculate values
+    Pll_ADF4351_show_RF_settings(&vals);                    // show calculated values
+    Pll_ADF4351_load_default_settings(&settings);           // load default settings
+    
+    // in order to change values access them in this way (example, no need to uncomment)
+    // settings.band_sel_clk_div = 80;                      
+
+    // fill in registers
+    Pll_ADF4351_fill_registers(&vals, &settings, &regs);    // fill registers with data
+
+    Pll_ADF4351_display_registers_hex(&regs);               // Display registers
+
+    // The right sequence according to datasheet is 5 to 0
+    data = &regs.reg5;
+    for (int i = REG_COUNT-1; i >= 0; i--) {
+        printf("Reg%d: |0x%.6x|\n\r", i, *data);
+        if (write_u32_order_spi(spi_fd, SPI_CS2, *data) < 0)                // SPI_CS1 or SPI_CS2
+        {
+            printf("Write to SPI failed. Error: %s\n", strerror(errno));
+            return -1;
+        }
+       
         data--; // go to next uint32
     }
 
